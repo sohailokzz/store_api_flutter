@@ -6,7 +6,13 @@ import '../constants/global_colors.dart';
 import '../screens/details_screen.dart';
 
 class FeedWidget extends StatelessWidget {
-  const FeedWidget({super.key});
+  final String title, imageUrl;
+
+  const FeedWidget({
+    super.key,
+    required this.title,
+    required this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,19 +64,19 @@ class FeedWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 width: double.infinity,
-                "https://placeimg.com/640/480/any",
+                imageUrl,
                 fit: BoxFit.fill,
                 height: size.height * 0.2,
               ),
             ),
             const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Title",
+                title,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w700,
                 ),

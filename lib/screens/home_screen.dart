@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:store_api_app/constants/global_colors.dart';
+import 'package:store_api_app/models/products_model.dart';
 import 'package:store_api_app/screens/users_screen.dart';
+import 'package:store_api_app/services/api_handler.dart';
 import 'package:store_api_app/widgets/appbar_icon.dart';
-import 'package:store_api_app/widgets/feed_widget.dart';
+import 'package:store_api_app/widgets/feeds_grid.dart';
 import 'package:store_api_app/widgets/sales_widget.dart';
 
 import 'categories_screen.dart';
@@ -21,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController _searchController;
 
+  List<ProductsModel> productList = [];
+
   @override
   void initState() {
     _searchController = TextEditingController();
@@ -31,6 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    getProducts();
+    super.didChangeDependencies();
+  }
+
+  Future<void> getProducts() async {
+    productList = await ApiHandlers.getAllProducts();
+    setState(() {});
   }
 
   @override
@@ -150,21 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 3,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
-                          childAspectRatio: 0.7,
-                        ),
-                        itemBuilder: (context, index) {
-                          return const FeedWidget();
-                        },
-                      )
+                      productList.isEmpty
+                          ? Container()
+                          : FeedsGridWidget(
+                              productsList: productList,
+                            )
                     ],
                   ),
                 ),

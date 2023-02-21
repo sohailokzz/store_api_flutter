@@ -31,4 +31,10 @@ class ProductsModel {
           )
         : null;
   }
+
+  static List<ProductsModel> productsFromSnapshot(List productSnaphot) {
+    return productSnaphot.map((data) {
+      return ProductsModel.fromJson(data);
+    }).toList();
+  }
 }
