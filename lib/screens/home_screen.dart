@@ -1,10 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:store_api_app/constants/global_colors.dart';
 import 'package:store_api_app/widgets/appbar_icon.dart';
 import 'package:store_api_app/widgets/feed_widget.dart';
 import 'package:store_api_app/widgets/sales_widget.dart';
+
+import 'feed_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -116,11 +119,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             const Spacer(),
                             AppBarIcon(
                               function: () {
-                                // Navigator.push(
-                                //     context,
-                                //     PageTransition(
-                                //         type: PageTransitionType.fade,
-                                //         child: const FeedsScreen()));
+                                Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.fade,
+                                    child: const FeedScreen(),
+                                  ),
+                                );
                               },
                               icon: IconlyBold.arrowRight2,
                             ),
