@@ -38,17 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    getProducts();
-    super.didChangeDependencies();
-  }
-
-  Future<void> getProducts() async {
-    productList = await ApiHandlers.getAllProducts();
-    setState(() {});
-  }
-
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return GestureDetector(
@@ -165,11 +154,30 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      productList.isEmpty
-                          ? Container()
-                          : FeedsGridWidget(
-                              productsList: productList,
-                            )
+                      FutureBuilder<List<ProductsModel>>(
+                        future: ApiHandlers.getAllProducts(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: lightIconsColor,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text("An Error accured ${snapshot.error}"),
+                            );
+                          } else if (snapshot.hasError) {
+                            return const Center(
+                              child: Text("No data added yet"),
+                            );
+                          }
+                          return FeedsGridWidget(
+                            productsList: snapshot.data!,
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),

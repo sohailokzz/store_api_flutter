@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:store_api_app/models/products_model.dart';
 
 import '../constants/global_colors.dart';
 import '../screens/details_screen.dart';
 
 class FeedWidget extends StatelessWidget {
-  final String title, imageUrl;
-
   const FeedWidget({
     super.key,
-    required this.title,
-    required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ProductsModel productsModelProvider =
+        Provider.of<ProductsModel>(context);
+
     Size size = MediaQuery.of(context).size;
     return Material(
       borderRadius: BorderRadius.circular(8.0),
@@ -46,7 +47,7 @@ class FeedWidget extends StatelessWidget {
                               color: Color.fromRGBO(33, 150, 243, 1)),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "168.00",
+                              text: productsModelProvider.price!.toString(),
                               style: TextStyle(
                                 color: lightTextColor,
                                 fontWeight: FontWeight.w600,
@@ -64,7 +65,7 @@ class FeedWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 width: double.infinity,
-                imageUrl,
+                productsModelProvider.images![0],
                 fit: BoxFit.fill,
                 height: size.height * 0.2,
               ),
@@ -73,7 +74,7 @@ class FeedWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                title,
+                productsModelProvider.title!,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: const TextStyle(

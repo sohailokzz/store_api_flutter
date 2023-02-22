@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:store_api_app/constants/global_colors.dart';
 
 import '../models/products_model.dart';
 import '../services/api_handler.dart';
@@ -33,7 +35,11 @@ class _FeedScreenState extends State<FeedScreen> {
         title: const Text('All Products'),
       ),
       body: productList.isEmpty
-          ? Container()
+          ? Center(
+              child: CircularProgressIndicator(
+                color: lightIconsColor,
+              ),
+            )
           : GridView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: productList.length,
@@ -44,9 +50,9 @@ class _FeedScreenState extends State<FeedScreen> {
                 childAspectRatio: 0.6,
               ),
               itemBuilder: (context, index) {
-                return FeedWidget(
-                  imageUrl: productList[index].images![0],
-                  title: productList[index].title.toString(),
+                return ChangeNotifierProvider.value(
+                  value: productList[index],
+                  child: const FeedWidget(),
                 );
               },
             ),
