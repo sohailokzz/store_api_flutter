@@ -64,10 +64,17 @@ class FeedWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
-                width: double.infinity,
                 productsModelProvider.images![0],
-                fit: BoxFit.fill,
+                width: double.infinity,
                 height: size.height * 0.2,
+                fit: BoxFit.fill,
+                errorBuilder: (
+                  BuildContext context,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return const Text('😢');
+                },
               ),
             ),
             const SizedBox(height: 10),

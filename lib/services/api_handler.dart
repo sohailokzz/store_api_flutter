@@ -1,9 +1,9 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:store_api_app/constants/api_constants.dart';
 import 'package:store_api_app/models/categories_model.dart';
 import 'package:store_api_app/models/products_model.dart';
+import 'package:store_api_app/models/users_model.dart';
 
 class ApiHandlers {
   static Future<List<dynamic>> getData({
@@ -39,6 +39,15 @@ class ApiHandlers {
     );
     return CategoriesModel.categoriesFromSnapshot(
       tempCategoriesList,
+    );
+  }
+
+  static Future<List<UsersModel>> getAllUsers() async {
+    List tempUserList = await getData(
+      target: 'users',
+    );
+    return UsersModel.usersFromSnapshot(
+      tempUserList,
     );
   }
 }
