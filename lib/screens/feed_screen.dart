@@ -16,15 +16,38 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
+  final ScrollController _scrollController = ScrollController();
   List<ProductsModel> productList = [];
+
+  int limit = 10;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    getProducts();
+    super.initState();
+  }
+
   @override
   void didChangeDependencies() {
-    getProducts();
+    // getProducts();
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _isLoading = true;
+
+        limit += 10;
+        await getProducts();
+        _isLoading = false;
+      }
+    });
     super.didChangeDependencies();
   }
 
   Future<void> getProducts() async {
-    productList = await ApiHandlers.getAllProducts();
+    productList = await ApiHandlers.getAllProducts(
+      limit: limit.toString(),
+    );
     setState(() {});
   }
 
@@ -32,6 +55,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // elevation: 4,
         title: const Text('All Products'),
       ),
       body: productList.isEmpty
@@ -40,21 +64,35 @@ class _FeedScreenState extends State<FeedScreen> {
                 color: lightIconsColor,
               ),
             )
-          : GridView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: productList.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 0.6,
+          : SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: productList.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio: 0.6,
+                      ),
+                      itemBuilder: (ctx, index) {
+                        return ChangeNotifierProvider.value(
+                          value: productList[index],
+                          child: const FeedWidget(),
+                        );
+                      }),
+                  if (_isLoading)
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: lightIconsColor,
+                      ),
+                    ),
+                ],
               ),
-              itemBuilder: (context, index) {
-                return ChangeNotifierProvider.value(
-                  value: productList[index],
-                  child: const FeedWidget(),
-                );
-              },
             ),
     );
   }

@@ -48,7 +48,9 @@ class MyApp extends StatelessWidget {
               secondary: lightIconsColor,
               brightness: Brightness.light,
             )
-            .copyWith(background: lightBackgroundColor),
+            .copyWith(
+              background: lightBackgroundColor,
+            ),
       ),
       home: const HomeScreen(),
     );
